@@ -251,7 +251,20 @@ class Viewer(QWidget):
         print("ADVANCE SEARCH DIALOG")
         dlg = AdvanceSearchDialog(self)
         if dlg.exec_():
-            print("Success!")
+            if dlg.id_checkbox.isChecked():
+                print(f'id_edit_line values: {dlg.id_edit_line.text()}')
+            if dlg.detail_checkbox.isChecked():
+                print(f'detail_edit_line values: {dlg.detail_edit_line.text()}')
+            if dlg.dod_checkbox.isChecked():
+                print(f'dod_edit_line values: {dlg.dod_edit_line.text()}')
+            if dlg.f_name_checkbox.isChecked():
+                print(f'f_name_edit_line values: {dlg.f_name_edit_line.text()}')
+            if dlg.m_name_checkbox.isChecked():
+                print(f'm_name_edit_line values: {dlg.m_name_edit_line.text()}')
+            if dlg.s_name_checkbox.isChecked():
+                print(f's_name_edit_line values: {dlg.s_name_edit_line.text()}')
+            if dlg.address_checkbox.isChecked():
+                print(f'address_edit_line values: {dlg.address_edit_line.text()}')
         else:
             print("Cancel!")
 

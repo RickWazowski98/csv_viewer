@@ -105,7 +105,7 @@ class AdvanceSearchDialog(QDialog):
     def id_checkbox_action(self, state):
         if QtCore.Qt.Checked == state:
             self.id_edit_line.setEnabled(True)
-            self.id_edit_line.setStyleSheet("""QLineEdit { background-color: lightgrey;}""")
+            self.id_edit_line.setStyleSheet("""QLineEdit { background-color: white;}""")
         else:
             self.id_edit_line.setEnabled(False)
             self.id_edit_line.setStyleSheet("""QLineEdit { background-color: #dce7ff;}""")
@@ -113,7 +113,7 @@ class AdvanceSearchDialog(QDialog):
     def detail_checkbox_action(self, state):
         if QtCore.Qt.Checked == state:
             self.detail_edit_line.setEnabled(True)
-            self.detail_edit_line.setStyleSheet("""QLineEdit { background-color: lightgrey;}""")
+            self.detail_edit_line.setStyleSheet("""QLineEdit { background-color: white;}""")
         else:
             self.detail_edit_line.setEnabled(False)
             self.detail_edit_line.setStyleSheet("""QLineEdit { background-color: #dce7ff;}""")
@@ -121,7 +121,7 @@ class AdvanceSearchDialog(QDialog):
     def dod_checkbox_action(self, state):
         if QtCore.Qt.Checked == state:
             self.dod_edit_line.setEnabled(True)
-            self.dod_edit_line.setStyleSheet("""QLineEdit { background-color: lightgrey;}""")
+            self.dod_edit_line.setStyleSheet("""QLineEdit { background-color: white;}""")
         else:
             self.dod_edit_line.setEnabled(False)
             self.dod_edit_line.setStyleSheet("""QLineEdit { background-color: #dce7ff;}""")
@@ -129,7 +129,7 @@ class AdvanceSearchDialog(QDialog):
     def f_name_checkbox_action(self, state):
         if QtCore.Qt.Checked == state:
             self.f_name_edit_line.setEnabled(True)
-            self.f_name_edit_line.setStyleSheet("""QLineEdit { background-color: lightgrey;}""")
+            self.f_name_edit_line.setStyleSheet("""QLineEdit { background-color: white;}""")
         else:
             self.f_name_edit_line.setEnabled(False)
             self.f_name_edit_line.setStyleSheet("""QLineEdit { background-color: #dce7ff;}""")
@@ -137,7 +137,7 @@ class AdvanceSearchDialog(QDialog):
     def m_name_checkbox_action(self, state):
         if QtCore.Qt.Checked == state:
             self.m_name_edit_line.setEnabled(True)
-            self.m_name_edit_line.setStyleSheet("""QLineEdit { background-color: lightgrey;}""")
+            self.m_name_edit_line.setStyleSheet("""QLineEdit { background-color: white;}""")
         else:
             self.m_name_edit_line.setEnabled(False)
             self.m_name_edit_line.setStyleSheet("""QLineEdit { background-color: #dce7ff;}""")
@@ -145,7 +145,7 @@ class AdvanceSearchDialog(QDialog):
     def s_name_checkbox_action(self, state):
         if QtCore.Qt.Checked == state:
             self.s_name_edit_line.setEnabled(True)
-            self.s_name_edit_line.setStyleSheet("""QLineEdit { background-color: lightgrey;}""")
+            self.s_name_edit_line.setStyleSheet("""QLineEdit { background-color: white;}""")
         else:
             self.s_name_edit_line.setEnabled(False)
             self.s_name_edit_line.setStyleSheet("""QLineEdit { background-color: #dce7ff;}""")
@@ -153,7 +153,7 @@ class AdvanceSearchDialog(QDialog):
     def address_checkbox_action(self, state):
         if QtCore.Qt.Checked == state:
             self.address_edit_line.setEnabled(True)
-            self.address_edit_line.setStyleSheet("""QLineEdit { background-color: lightgrey;}""")
+            self.address_edit_line.setStyleSheet("""QLineEdit { background-color: white;}""")
         else:
             self.address_edit_line.setEnabled(False)
             self.address_edit_line.setStyleSheet("""QLineEdit { background-color: #dce7ff;}""")
