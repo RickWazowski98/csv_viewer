@@ -8,7 +8,7 @@ Base = declarative_base()
 class Row(Base):
     __tablename__ = 'row'
     id = Column(Integer, Sequence('row_id_seq'), primary_key=True)
-    item_id = Column(String)
+    item_id = Column(String, unique=True)
     detail = Column(String)
     d_o_d = Column(String)
     f_name = Column(String)

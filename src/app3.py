@@ -4,10 +4,12 @@ from PyQt5.QtWidgets import (
     QApplication, QWidget, QLineEdit, QTableView,
     QHeaderView, QVBoxLayout, QHBoxLayout, QRadioButton,
     QToolBar, QAction, QFileDialog, QPushButton,
+    QMessageBox
 )
 from PyQt5 import QtCore
 from PyQt5.QtCore import Qt, QSortFilterProxyModel
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
+from sqlalchemy.exc import IntegrityError, PendingRollbackError
 
 from tools import read_csv_data
 from widgets import AdvanceSearchDialog
@@ -145,7 +147,12 @@ class Viewer(QWidget):
                     address=row[6],
                 ))
             session.add_all(fill_data_to_db)
-            session.commit()
+            try:
+                session.commit()
+            except (IntegrityError, PendingRollbackError) as exc:
+                session.rollback()
+                print(exc)
+                QMessageBox.warning(self, "DB Warning", "Item ID must be unique")
 
             data = []
             qs = session.query(Row).all()
