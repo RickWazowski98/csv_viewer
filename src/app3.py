@@ -11,6 +11,8 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 from tools import read_csv_data
 from widgets import AdvanceSearchDialog
+from db import session
+from models import Row
 
 
 class Viewer(QWidget):
@@ -49,137 +51,29 @@ class Viewer(QWidget):
         update_action = QAction("Load from CSV", self)
         update_action.setStatusTip("Load new data to database from csv file")
         update_action.triggered.connect(self.action_update)
+        refresh_table = QAction("Refresh table", self)
+        refresh_table.triggered.connect(self.action_refresh_table)
         tool_bar.addAction(update_action)
+        tool_bar.addAction(refresh_table)
         mainLayout.addWidget(tool_bar)
 
-
-        data = [
-            ["2101032", "Lamberts Solicitors, 60 Commercial Road, Paddock Wood, Kent TN12 6DP. (G.K.C. Chapman)",
-            "03-Dec-13", "Audrey", "May", "Ballard", "45 Warrington Road, Paddock Wood, Kent TN12 6HN"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-            "Mary", "May", "Bee",
-            "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101032", "Lamberts Solicitors, 60 Commercial Road, Paddock Wood, Kent TN12 6DP. (G.K.C. Chapman)",
-             "03-Dec-13", "Audrey", "May", "Ballard", "45 Warrington Road, Paddock Wood, Kent TN12 6HN"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101032", "Lamberts Solicitors, 60 Commercial Road, Paddock Wood, Kent TN12 6DP. (G.K.C. Chapman)",
-             "03-Dec-13", "Audrey", "May", "Ballard", "45 Warrington Road, Paddock Wood, Kent TN12 6HN"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-            ["2101034", "Frearsons, 50 Algitha Road, Skegness, Lincolnshire PE25 2AW. (Ian Dexter)", "11-Sep-13",
-             "Mary", "May", "Bee",
-             "Syne Hills Care Home, 16 Syne Avenue, Skegness, Lincolnshire PE25 3DJ formerly of5 Mount Pleasant, Wainfleet, Skegness, Lincolnshire"],
-        ]
-        headers = [
+        data = []
+        qs = session.query(Row).all()
+        if len(qs):
+            for item in qs:
+                data.append([item.item_id, item.detail, item.d_o_d, item.f_name, item.m_name, item.s_name, item.address])
+        else:
+            data.append(["2101032", "Lamberts Solicitors, 60 Commercial Road, Paddock Wood, Kent TN12 6DP. (G.K.C. Chapman)",
+            "03-Dec-13", "Audrey", "May", "Ballard", "45 Warrington Road, Paddock Wood, Kent TN12 6HN"])
+        self.headers = [
             "ID", "Details", "Date of death", "First name", "Middle name", "Surname", "Address"
         ]
         model = QStandardItemModel(len(data), len(data[0]))
-        model.setHorizontalHeaderLabels(headers)
-
+        model.setHorizontalHeaderLabels(self.headers)
         for row, values in enumerate(data):
             for val in values:
                 item = QStandardItem(val)
                 model.setItem(row, values.index(val), item)
-
         self.filter_proxy_model = QSortFilterProxyModel()
         self.filter_proxy_model.setSourceModel(model)
         self.filter_proxy_model.setFilterCaseSensitivity(Qt.CaseSensitivity())
@@ -200,9 +94,9 @@ class Viewer(QWidget):
         searchLayout.addWidget(address_r_button)
         mainLayout.addLayout(searchLayout)
 
-        table = QTableView()
-        table.setAutoFillBackground(True)
-        table.setStyleSheet(
+        self.table = QTableView()
+        self.table.setAutoFillBackground(True)
+        self.table.setStyleSheet(
             "QTableView::item:selected{"
             "background-color:#8c96ff;"
             "}"
@@ -221,10 +115,10 @@ class Viewer(QWidget):
             "border-bottom: 5px solid lightgrey;"
             "background-color:lightgrey;"
             "}")
-        table.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        table.setModel(self.filter_proxy_model)
-        mainLayout.addWidget(table)
+        self.table.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.table.setModel(self.filter_proxy_model)
+        mainLayout.addWidget(self.table)
 
         id_r_button.setChecked(True)
 
@@ -236,35 +130,81 @@ class Viewer(QWidget):
         self.setLayout(mainLayout)
 
     def action_update(self):
-        fname = QFileDialog.getOpenFileName(parent=self, caption="Open file", filter="CSV Files (*.csv)" )[0]
+        fname = QFileDialog.getOpenFileName(parent=self, caption="Open file", filter="CSV Files (*.csv)")[0]
         if fname:
             data = read_csv_data(fname)
-            print(data)
+            fill_data_to_db = []
+            for row in data:
+                fill_data_to_db.append(Row(
+                    item_id=row[0],
+                    detail=row[1],
+                    d_o_d=row[2],
+                    f_name=row[3],
+                    m_name=row[4],
+                    s_name=row[5],
+                    address=row[6],
+                ))
+            session.add_all(fill_data_to_db)
+            session.commit()
+
+            data = []
+            qs = session.query(Row).all()
+            for item in qs:
+                data.append(
+                    [item.item_id, item.detail, item.d_o_d, item.f_name, item.m_name, item.s_name, item.address])
+            model = QStandardItemModel(len(data), len(data[0]))
+            model.setHorizontalHeaderLabels(self.headers)
+            for row, values in enumerate(data):
+                for val in values:
+                    item = QStandardItem(val)
+                    model.setItem(row, values.index(val), item)
+            self.filter_proxy_model.setSourceModel(model)
+            self.table.setModel(self.filter_proxy_model)
+
+    def action_refresh_table(self):
+        data = []
+        qs = session.query(Row).all()
+        for item in qs:
+            data.append(
+                [item.item_id, item.detail, item.d_o_d, item.f_name, item.m_name, item.s_name, item.address])
+        model = QStandardItemModel(len(data), len(data[0]))
+        model.setHorizontalHeaderLabels(self.headers)
+        for row, values in enumerate(data):
+            for val in values:
+                item = QStandardItem(val)
+                model.setItem(row, values.index(val), item)
+        self.filter_proxy_model.setSourceModel(model)
+        self.table.setModel(self.filter_proxy_model)
 
     def choice_search_field(self):
         rb = self.sender()
         if rb.isChecked():
             self.filter_proxy_model.setFilterKeyColumn(rb.check_index)
-            print(rb.check_index)
 
     def advance_search_dialog(self):
-        print("ADVANCE SEARCH DIALOG")
         dlg = AdvanceSearchDialog(self)
         if dlg.exec_():
-            if dlg.id_checkbox.isChecked():
-                print(f'id_edit_line values: {dlg.id_edit_line.text()}')
-            if dlg.detail_checkbox.isChecked():
-                print(f'detail_edit_line values: {dlg.detail_edit_line.text()}')
-            if dlg.dod_checkbox.isChecked():
-                print(f'dod_edit_line values: {dlg.dod_edit_line.text()}')
-            if dlg.f_name_checkbox.isChecked():
-                print(f'f_name_edit_line values: {dlg.f_name_edit_line.text()}')
-            if dlg.m_name_checkbox.isChecked():
-                print(f'm_name_edit_line values: {dlg.m_name_edit_line.text()}')
-            if dlg.s_name_checkbox.isChecked():
-                print(f's_name_edit_line values: {dlg.s_name_edit_line.text()}')
-            if dlg.address_checkbox.isChecked():
-                print(f'address_edit_line values: {dlg.address_edit_line.text()}')
+            data = []
+            qs = session.query(Row).filter(
+                Row.item_id.contains(dlg.id_edit_line.text()),
+                Row.detail.contains(dlg.detail_edit_line.text()),
+                Row.d_o_d.contains(dlg.dod_edit_line.text()),
+                Row.f_name.contains(dlg.f_name_edit_line.text()),
+                Row.m_name.contains(dlg.m_name_edit_line.text()),
+                Row.s_name.contains(dlg.s_name_edit_line.text()),
+                Row.address.contains(dlg.address_edit_line.text())
+            ).all()
+            for item in qs:
+                data.append(
+                    [item.item_id, item.detail, item.d_o_d, item.f_name, item.m_name, item.s_name, item.address])
+            model = QStandardItemModel(len(data), len(data[0]))
+            model.setHorizontalHeaderLabels(self.headers)
+            for row, values in enumerate(data):
+                for val in values:
+                    item = QStandardItem(val)
+                    model.setItem(row, values.index(val), item)
+            self.filter_proxy_model.setSourceModel(model)
+            self.table.setModel(self.filter_proxy_model)
         else:
             print("Cancel!")
 
